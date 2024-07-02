@@ -1,0 +1,12 @@
+#include "trap.h"
+
+int main() {
+    volatile char *psram = (char *)0x80000000;
+    check(*(psram + 0) == 0xde);
+    check(*(psram + 1) == 0xad);
+    check(*(psram + 4) == 0xbe);
+    *(volatile uint32_t *)(psram + 1) = 0x1234;
+    check(*(psram + 1) == 0x34);
+    check(*(psram + 2) == 0x12);
+    return 0;
+}
