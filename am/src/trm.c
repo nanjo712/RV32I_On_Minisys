@@ -6,7 +6,7 @@ extern char _head_end;
 int main();
 
 void putch(char c) {
-
+    
 }
 
 void getch(char *c) {
