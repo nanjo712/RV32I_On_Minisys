@@ -1,0 +1,10 @@
+set_property PACKAGE_PIN Y18 [get_ports clock]
+set_property IOSTANDARD LVCMOS33 [get_ports clock]
+set_property PACKAGE_PIN Y19 [get_ports rx]
+set_property IOSTANDARD LVCMOS33 [get_ports rx]
+set_property PACKAGE_PIN V18 [get_ports tx]
+set_property IOSTANDARD LVCMOS33 [get_ports tx]
+set_property PACKAGE_PIN P20 [get_ports reset]
+set_property IOSTANDARD LVCMOS33 [get_ports reset]
+
+create_clock -period 10.00 [get_ports clock]
