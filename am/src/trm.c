@@ -1,12 +1,11 @@
 extern char _head_start;
 extern char _head_end;
 
-#define UART_BASE 0x10000000
-
 int main();
 
 void putch(char c) {
-    
+  while((*((volatile char *)0x10000005) & 65) != 65);
+  *((volatile char *)0x10000000) = c;
 }
 
 void getch(char *c) {

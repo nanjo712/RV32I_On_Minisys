@@ -1,8 +1,16 @@
-#include "trap.h"
-
-//char buf[128];
+#include "../include/am.h"
 
 int main() {
-	printf("Hello, World!\n");
+	putch('H');
+	putch('e');
+	putch('l');
+	putch('l');
+	putch('o');
+	putch(' ');
+	putch('W');
+	putch('o');
+	putch('r');
+	putch('l');
+	putch('d');
 	return 0;
 }
