@@ -4,12 +4,12 @@ extern char _head_end;
 int main();
 
 void putch(char c) {
-  while((*((volatile char *)0x10000005) & 65) != 65);
-  *((volatile char *)0x10000000) = c;
+    while((*((volatile char *)0x10000008) & 0x00000004) != 0x00000004);
+    *((volatile char *)0x10000004) = c;
 }
 
 void getch(char *c) {
-    
+    *c = *((volatile char *)0x10000000);
 }
 
 void halt(int code) {
