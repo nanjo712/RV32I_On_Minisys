@@ -1,4 +1,4 @@
-COMPILER = riscv64-linux-gnu-
+COMPILER = riscv64-unknown-elf-
 CC = $(COMPILER)gcc
 LD = $(COMPILER)ld
 AR = $(COMPILER)ar

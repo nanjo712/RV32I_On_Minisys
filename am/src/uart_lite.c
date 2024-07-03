@@ -1,4 +1,4 @@
-#include "../include/uart_lite.h"
+#include "uart_lite.h"
 
 HAL_StatusTypeDef uart_lite_init(HAL_UART_LITE_TypeDef *uart)
 {

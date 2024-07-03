@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "hal.h"
+#include "hal_status.h"
 
 #define UART_LITE_BASEADDR 0x10000000
 #define UART_LITE_RXFIFO_OFFSET 0x0
