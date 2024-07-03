@@ -118,7 +118,7 @@ wire [3:0] in_ALUctr = (auipc || addi || add || jal || jalr || (op == ladOpI) ||
                        (ori || _or) ? 4'b0110 :
                        (andi || _and) ? 4'b0111 :
                        (sub) ? 4'b1000 :
-                       (sltiu || sltu) ? 4'b1010 :
+                       (sltiu || sltu || bgeu || bltu) ? 4'b1010 :
                        (srai || sra) ? 4'b1101 : 4'b1111; 
                  
 wire [2:0] in_Branch = (jal) ? 3'b001 :

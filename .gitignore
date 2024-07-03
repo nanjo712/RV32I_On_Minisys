@@ -1,1 +1,10 @@
 *build
+*.coe
+sources/CCDesign.cache
+sources/CCDesign.gen
+sources/CCDesign.hw
+sources/CCDesign.ip_user_files
+sources/CCDesign.runs
+sources/CCDesign.sim
+sources/ip_upgrade.log
+sources/vivado*

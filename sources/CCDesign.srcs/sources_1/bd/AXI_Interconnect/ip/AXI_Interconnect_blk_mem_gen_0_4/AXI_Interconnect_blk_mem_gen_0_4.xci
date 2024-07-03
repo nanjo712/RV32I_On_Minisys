@@ -52,7 +52,7 @@
         "register_portb_output_of_softecc": [ { "value": "false", "resolve_type": "user", "format": "bool", "enabled": false, "usage": "all" } ],
         "Pipeline_Stages": [ { "value": "0", "resolve_type": "user", "enabled": false, "usage": "all" } ],
         "Load_Init_File": [ { "value": "true", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
-        "Coe_File": [ { "value": "../../../../../../CCDesign.am/target.coe", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
+        "Coe_File": [ { "value": "../../../../../../../unalign.coe", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "Fill_Remaining_Memory_Locations": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "Remaining_Memory_Locations": [ { "value": "0", "resolve_type": "user", "enabled": false, "usage": "all" } ],
         "Use_RSTA_Pin": [ { "value": "true", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
@@ -178,7 +178,7 @@
         "OUTPUTDIR": [ { "value": "../../../../../../CCDesign.gen/sources_1/bd/AXI_Interconnect/ip/AXI_Interconnect_blk_mem_gen_0_4" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
-        "SWVERSION": [ { "value": "2023.2.2" } ],
+        "SWVERSION": [ { "value": "2023.2" } ],
         "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
       }
     },

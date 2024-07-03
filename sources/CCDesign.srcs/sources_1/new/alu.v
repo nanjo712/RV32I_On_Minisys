@@ -1,7 +1,7 @@
 module alu(
     A, B, ALUctr, ALUout, Zero, Less
 );
-    input  [31:0] A, B;
+    input [31:0] A, B;
     input  [3:0] ALUctr;
     output [31:0] ALUout;         
     output Less;
@@ -105,7 +105,7 @@ module alu(
                     end
                 4'b1101:
                     begin
-                        Ans = A >>> B[4:0];
+                        Ans = $signed(A) >>> B[4:0];
                         Less = 0;
                         ALUout = Ans;
                     end
