@@ -7,14 +7,14 @@
       "name": "AXI_Interconnect",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
       "synth_flow_mode": "Hierarchical",
-      "tool_version": "2023.2.2"
+      "tool_version": "2023.2.2",
+      "validated": "true"
     },
     "design_tree": {
       "axi_uartlite_0": "",
       "axi_bram_ctrl_0": "",
       "blk_mem_gen_0": "",
-      "axi_crossbar_0": "",
-      "axi_quad_spi_0": ""
+      "axi_crossbar_0": ""
     },
     "interface_ports": {
       "core": {
@@ -251,22 +251,64 @@
           "ASSOCIATED_BUSIF": {
             "value": "core"
           },
+          "ASSOCIATED_RESET": {
+            "value": "rst_n",
+            "value_src": "default"
+          },
+          "CLK_DOMAIN": {
+            "value": "AXI_Interconnect_clk",
+            "value_src": "default"
+          },
           "FREQ_HZ": {
             "value": "50000000"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
           }
         }
       },
       "rst_n": {
         "type": "rst",
-        "direction": "I"
+        "direction": "I",
+        "parameters": {
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "POLARITY": {
+            "value": "ACTIVE_LOW",
+            "value_src": "default"
+          }
+        }
       },
       "rx": {
         "type": "data",
-        "direction": "I"
+        "direction": "I",
+        "parameters": {
+          "LAYERED_METADATA": {
+            "value": "undef",
+            "value_src": "default"
+          }
+        }
       },
       "tx": {
         "type": "data",
-        "direction": "O"
+        "direction": "O",
+        "parameters": {
+          "LAYERED_METADATA": {
+            "value": "undef",
+            "value_src": "default"
+          }
+        }
       }
     },
     "components": {
@@ -349,24 +391,6 @@
               "M00_AXI",
               "M01_AXI"
             ]
-          }
-        }
-      },
-      "axi_quad_spi_0": {
-        "vlnv": "xilinx.com:ip:axi_quad_spi:3.2",
-        "ip_revision": "29",
-        "xci_name": "AXI_Interconnect_axi_quad_spi_0_0",
-        "xci_path": "ip/AXI_Interconnect_axi_quad_spi_0_0/AXI_Interconnect_axi_quad_spi_0_0.xci",
-        "inst_hier_path": "axi_quad_spi_0",
-        "parameters": {
-          "C_SPI_MODE": {
-            "value": "2"
-          },
-          "C_USE_STARTUP": {
-            "value": "0"
-          },
-          "C_XIP_MODE": {
-            "value": "0"
           }
         }
       }
