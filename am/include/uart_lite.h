@@ -8,7 +8,7 @@ extern "C"
 
 #include "hal_status.h"
 
-#define UART_LITE_BASEADDR 0x10000000
+#define UART_LITE_BASEADDR 0x40000000
 #define UART_LITE_RXFIFO_OFFSET 0x0
 #define UART_LITE_TXFIFO_OFFSET 0x4
 #define UART_LITE_STATUS_OFFSET 0x8

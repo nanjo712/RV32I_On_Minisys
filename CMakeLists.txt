@@ -11,20 +11,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # set compiler
-set(CMAKE_C_COMPILER riscv64-unknown-elf-gcc)
-set(CMAKE_CXX_COMPILER riscv64-unknown-elf-g++)
-set(CMAKE_ASM_COMPILER riscv64-unknown-elf-gcc)
-set(CMAKE_AR riscv64-unknown-elf-ar)
-set(CMAKE_LINKER riscv64-unknown-elf-ld)
-set(CMAKE_OBJCOPY riscv64-unknown-elf-objcopy)
-set(CMAKE_OBJDUMP riscv64-unknown-elf-objdump)
-set(SIZE riscv64-unknown-elf-size)
+set(CMAKE_C_COMPILER riscv32-unknown-elf-gcc)
+set(CMAKE_CXX_COMPILER riscv32-unknown-elf-g++)
+set(CMAKE_ASM_COMPILER riscv32-unknown-elf-gcc)
+set(CMAKE_AR riscv32-unknown-elf-ar)
+set(CMAKE_LINKER riscv32-unknown-elf-ld)
+set(CMAKE_OBJCOPY riscv32-unknown-elf-objcopy)
+set(CMAKE_OBJDUMP riscv32-unknown-elf-objdump)
+set(SIZE riscv32-unknown-elf-size)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # set flags
-set(CMAKE_C_FLAGS "-Wall -O2 -Werror -march=rv32i -mabi=ilp32 -nostdlib -ffunction-sections -fdata-sections")
-set(CMAKE_CXX_FLAGS "-Wall -O2 -Werror -march=rv32i -mabi=ilp32 -nostdlib -ffunction-sections -fdata-sections")
-set(CMAKE_ASM_FLAGS "-Wall -O2 -Werror -march=rv32i -mabi=ilp32 -nostdlib -ffunction-sections -fdata-sections")
+set(CMAKE_C_FLAGS "-Wall -O2 -Werror -march=rv32i_zicsr -mabi=ilp32 -nostartfiles -ffunction-sections -fdata-sections")
+set(CMAKE_CXX_FLAGS "-Wall -O2 -Werror -march=rv32i_zicsr -mabi=ilp32 -nostartfiles -ffunction-sections -fdata-sections")
+set(CMAKE_ASM_FLAGS "-Wall -O2 -Werror -march=rv32i_zicsr -mabi=ilp32 -nostartfiles -ffunction-sections -fdata-sections")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/linker.ld)
 add_link_options(-Wl,--gc-sections,--print-map,--defsym=_pmem_start=0x80000000,-melf32lriscv)
@@ -59,7 +59,7 @@ add_custom_command(
     COMMAND ${SIZE} $<TARGET_FILE:${PROJECT_NAME}.elf>
     COMMAND ./bin2coe ${BIN_FILE} ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe
     COMMAND ${CMAKE_OBJDUMP} -d $<TARGET_FILE:${PROJECT_NAME}.elf> > ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.txt
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe /mnt/d/RV32I_On_Minisys
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe /mnt/c/Users/john/Documents/RV32I/
     COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}"
 )
 
