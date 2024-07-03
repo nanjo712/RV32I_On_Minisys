@@ -1,9 +1,9 @@
 {
    "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"1.17512",
-   "Default View_TopLeft":"-101,-500",
+   "Default View_ScaleFactor":"1.49119",
+   "Default View_TopLeft":"448,-27",
    "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
+   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0 TLS
 #  -string -flagsOSRD
 preplace port core -pg 1 -lvl 0 -x -20 -y -230 -defaultsOSRD
 preplace port port-id_clk -pg 1 -lvl 0 -x -20 -y -180 -defaultsOSRD
@@ -14,16 +14,17 @@ preplace inst axi_uartlite_0 -pg 1 -lvl 2 -x 730 -y -350 -defaultsOSRD
 preplace inst axi_bram_ctrl_0 -pg 1 -lvl 2 -x 730 -y -140 -defaultsOSRD
 preplace inst blk_mem_gen_0 -pg 1 -lvl 3 -x 1010 -y -140 -defaultsOSRD
 preplace inst axi_crossbar_0 -pg 1 -lvl 1 -x 340 -y -230 -defaultsOSRD
+preplace inst axi_quad_spi_0 -pg 1 -lvl 2 -x 730 -y 90 -defaultsOSRD
 preplace netloc axi_uartlite_0_tx 1 2 2 870 -330 N
-preplace netloc clk_1 1 0 2 200 -310 580
-preplace netloc rst_n_1 1 0 2 180 -320 590
-preplace netloc rx_1 1 2 2 NJ -360 1110
+preplace netloc clk_1 1 0 2 190 -150 590
+preplace netloc rst_n_1 1 0 2 200 -140 580
+preplace netloc rx_1 1 2 2 NJ -360 1120
 preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 2 1 N -140
 preplace netloc axi_crossbar_0_M00_AXI 1 1 1 480 -370n
 preplace netloc axi_crossbar_0_M01_AXI 1 1 1 480 -220n
-preplace netloc core_1 1 0 1 190 -250n
+preplace netloc core_1 1 0 1 0 -250n
 levelinfo -pg 1 -20 340 730 1010 1140
-pagesize -pg 1 -db -bbox -sgen -400 -550 1250 830
+pagesize -pg 1 -db -bbox -sgen -400 -620 1250 830
 "
 }
 {

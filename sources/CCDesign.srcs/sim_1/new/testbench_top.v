@@ -39,12 +39,12 @@ initial begin
     rx = 1'b1;
     clock = 1'b0;
     reset = 1'b1;
-    #100 reset = 1'b0;
+    #50 reset = 1'b0;
 end
 
 always begin
-    #20 clock = 1;
-    #20 clock = 0;
+    #5 clock = 1;
+    #5 clock = 0;
 end
 
 endmodule

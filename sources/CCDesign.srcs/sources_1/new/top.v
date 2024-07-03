@@ -27,8 +27,12 @@ module top(
     input rx,
     output tx
 );
+wire clk_10Mhz;
+wire clk_30Mhz;
+wire clk_50Mhz;
+wire clk_100Mhz;
 
-wire clk = clock;
+wire clk = clk_50Mhz;
 wire rst;
 
 wire [31:0] araddr;
@@ -52,6 +56,20 @@ wire wready;
 wire [1:0] bresp;
 wire bvalid;
 wire bready;
+
+
+clk_wiz_0 u_clk_wiz(
+  // Clock out ports
+  .clk_10Mhz(clk_10Mhz),
+  .clk_30Mhz(clk_30Mhz),
+  .clk_50Mhz(clk_50Mhz),
+  .clk_100Mhz(clk_100Mhz),
+  // Status and control signals
+  .reset(reset),
+  .locked(),
+ // Clock in ports
+  .clk_in(clock)
+ );
 
 AXI_Interconnect u_AXI(
     .clk(clk),
@@ -100,7 +118,7 @@ core u_core(
 );
 
 asyncRstSyncRelease u_arsr(
-    .clk(clock),
+    .clk(clk),
     .rst(reset),
     .sync_rst(rst)
 );
