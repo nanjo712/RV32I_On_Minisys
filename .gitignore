@@ -1,5 +1,6 @@
 *build
 *.coe
+.cache
 sources/CCDesign.cache
 sources/CCDesign.gen
 sources/CCDesign.hw

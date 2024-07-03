@@ -16,13 +16,17 @@ extern "C"
 #define UART_LITE_CONTROL_IT (1 << 4)
 #define UART_LITE_CONTROL_RST_TX (1 << 0)
 #define UART_LITE_CONTROL_RST_RX (1 << 1)
+#define UART_LITE_STATUS_TX_FULL (1 << 3)
+#define UART_LITE_STATUS_TX_EMPTY (1 << 2)
+#define UART_LITE_STATUS_RX_FULL (1 << 1)
+#define UART_LITE_STATUS_RX_VALID (1 << 0)
 
     typedef struct
     {
-        unsigned char *rx_fifo;
-        unsigned char *tx_fifo;
-        unsigned int *status;
-        unsigned int *control;
+        volatile unsigned char *rx_fifo;
+        volatile unsigned char *tx_fifo;
+        volatile unsigned int *status;
+        volatile unsigned int *control;
     } HAL_UART_LITE_TypeDef;
 
     HAL_StatusTypeDef uart_lite_init(HAL_UART_LITE_TypeDef *uart);
