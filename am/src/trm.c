@@ -10,12 +10,27 @@ Area heap = {
 
 int main();
 
+void putch(char c) {
+    while((*((volatile char *)0x40000008) & 0x00000004) != 0x00000004);
+    *((volatile char *)0x40000004) = c;
+}
+
+void getch(char *c) {
+    *c = *((volatile char *)0x40000000);
+}
+
 void halt(int code) {
     asm volatile(
         "mv a0, %0\n" \
         : \
         : "r"(code));
     while(1);
+}
+
+void assert(int cond) {
+    if(!cond) {
+        halt(1);
+    }
 }
 
 void _trm_init() {

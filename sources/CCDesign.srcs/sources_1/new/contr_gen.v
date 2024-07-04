@@ -2,12 +2,14 @@ module contr_gen(
     input wire clk,
     input wire rst,
 
-    input wire [6:0] op,
-    input wire [2:0] func3,
-    input wire [6:0] func7,
+    input wire [31:0] inst,
 
     input wire ifu_ready,
     input wire lsu_ready,
+    
+    input wire ext_interrupt,
+    input wire sof_interrupt,
+    input wire tim_interrupt,
 
     output wire InsFetch,
     output wire [2:0] ExtOP,
@@ -16,10 +18,16 @@ module contr_gen(
     output wire [1:0] ALUBsrc,
     output wire [3:0] ALUctr,
     output wire [2:0] Branch,
-    output wire MemtoReg,
+    output wire [1:0] toReg,
     output wire MemWr,
     output wire [2:0] MemOP,
-    output wire PCInc
+    output wire PCInc,
+    output wire [1:0] CSROp,
+    output wire ecall,
+    output wire mret,
+    output wire ext,
+    output wire sof,
+    output wire tim
 );
 
 reg [2:0] cycle;
@@ -28,11 +36,16 @@ wire W1 = cycle == 3'b001;
 wire W2 = cycle == 3'b010;
 wire W3 = cycle == 3'b100;
 
+wire [6:0] op = inst[6:0];
+wire [2:0] func3 = inst[14:12];
+wire [6:0] func7 = inst[31:25];
+
 wire [6:0] ALUOpI = 7'b0010011;
 wire [6:0] ALUOpR = 7'b0110011;
 wire [6:0] BrcOpB = 7'b1100011; 
 wire [6:0] ladOpI = 7'b0000011;
 wire [6:0] strOpS = 7'b0100011;
+wire [6:0] SysOpI = 7'b1110011;
 
 wire lui = (op == 7'b0110111);
 wire auipc = (op == 7'b0010111);
@@ -77,6 +90,18 @@ wire sb = ({func3, op} == {3'b000, strOpS});
 wire sh = ({func3, op} == {3'b001, strOpS});
 wire sw = ({func3, op} == {3'b010, strOpS});
 
+wire csrrw = ({func3, op} == {3'b001, SysOpI});
+wire csrrs = ({func3, op} == {3'b010, SysOpI});
+wire csrrc = ({func3, op} == {3'b011, SysOpI});
+wire csrrwi = ({func3, op} == {3'b101, SysOpI});
+wire csrrsi = ({func3, op} == {3'b110, SysOpI});
+wire csrrci = ({func3, op} == {3'b111, SysOpI});
+
+wire in_ecall = inst == 32'b00000000000000000000000001110011;
+wire in_mret = inst == 32'b00110000001000000000000001110011;
+
+wire csrType = csrrw || csrrs || csrrc || csrrwi || csrrsi || csrrci;
+
 always @(posedge clk or posedge rst) begin
     if(rst) begin
         cycle <= 3'b001;
@@ -94,14 +119,14 @@ end
 
 wire in_InsFetch = 1;
 
-wire [2:0] in_ExtOP = ((op == ALUOpI || op == ladOpI || jalr)) ? 3'b000 : // I type
+wire [2:0] in_ExtOP = ((op == ALUOpI || op == ladOpI || jalr || csrType)) ? 3'b000 : // I type
                       ((lui || auipc)) ? 3'b001 : // U type
                       ((op == strOpS)) ? 3'b010 : // S type
                       ((op == BrcOpB)) ? 3'b011 : // B type
                       (jal) ? 3'b100 : // J type
                       3'b111;
 
-wire in_RegWr = (lui || auipc || jal || jalr || op == ALUOpI || op == ALUOpR || op == ladOpI);
+wire in_RegWr = (lui || auipc || jal || jalr || op == ALUOpI || op == ALUOpR || op == ladOpI || csrType);
 
 wire in_ALUAsrc = auipc || jal || jalr;
 
@@ -123,12 +148,14 @@ wire [3:0] in_ALUctr = (auipc || addi || add || jal || jalr || (op == ladOpI) ||
                  
 wire [2:0] in_Branch = (jal) ? 3'b001 :
                        (jalr) ? 3'b010 :
+                       (ecall || mret) ? 3'b011 :
                        (beq) ? 3'b100 :
                        (bne) ? 3'b101 :
                        (blt || bltu) ? 3'b110 :
                        (bge || bgeu) ? 3'b111 : 3'b000;
                  
-wire in_MemtoReg = (op == ladOpI);
+wire [1:0] in_toReg = (op == ladOpI) ? 2'b01 :
+                      (csrType) ? 2'b10 : 2'b00;
 
 wire in_MemWr = (op == strOpS);
 
@@ -140,16 +167,22 @@ wire [2:0] in_MemOP = (lb || sb) ? 3'b000 :
                 
 wire in_PCInc = 1;
 
+wire [1:0] in_CSROp = (csrrw || csrrwi) ? 2'b01 :
+                (csrrs || csrrsi) ? 2'b10 :
+                (csrrc || csrrci) ? 2'b11 : 2'b00;
+
+wire endofInst = (W2) ? 
+                    (op == strOpS) ? 
+                        lsu_ready :
+                    (op == ladOpI) ? 
+                        0 : 
+                    1 :
+                 (W3);
+
 assign InsFetch = (W1) ? in_InsFetch : 0;
 assign ExtOP = (W2) ? in_ExtOP : 3'b000;
 
-assign RegWr = ((W2) ? 
-                    (op == strOpS) ? 
-                        lsu_ready :
-                        (op == ladOpI) ? 
-                            0 : 
-                            1 :
-                    (W3)) ? in_RegWr : 0;
+assign RegWr =  (endofInst) ? in_RegWr : 0;
 
 assign ALUAsrc = (W2) ? in_ALUAsrc : 0;
 
@@ -159,17 +192,24 @@ assign ALUctr = (W2) ? in_ALUctr : 4'b0000;
 
 assign Branch = (W2) ? in_Branch : 3'b000;
 
-assign MemtoReg = (W3) ? in_MemtoReg : 0;
+assign toReg = (endofInst) ? in_toReg : 2'b00;
 
 assign MemWr = (W2) ? in_MemWr : 0;
 
 assign MemOP = (W2) ? in_MemOP : 3'b111;
 
-assign PCInc = ((W2) ? 
-                    (op == strOpS) ? 
-                        lsu_ready :
-                        (op == ladOpI) ? 
-                            0 : 
-                            1 :
-                    (W3)) ? in_PCInc : 0;
+assign PCInc = (endofInst) ? in_PCInc : 0;
+
+assign CSROp = (endofInst) ? in_CSROp : 2'b00;
+
+assign ecall = (endofInst) ? in_ecall : 0;
+
+assign mret = (endofInst) ? in_mret : 0;
+
+assign ext = (endofInst) ? ext_interrupt : 0;
+
+assign sof = (endofInst) ? sof_interrupt : 0;
+
+assign tim = (endofInst) ? tim_interrupt : 0;
+
 endmodule

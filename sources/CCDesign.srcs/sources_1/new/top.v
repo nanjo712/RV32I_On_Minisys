@@ -57,6 +57,7 @@ wire [1:0] bresp;
 wire bvalid;
 wire bready;
 
+wire extIntr;
 
 clk_wiz_0 u_clk_wiz(
   // Clock out ports
@@ -75,6 +76,7 @@ AXI_Interconnect u_AXI(
     .clk(clk),
     .rst_n(~rst),
     .core_araddr(araddr),
+    .core_arprot(),
     .core_arvalid(arvalid),
     .core_arready(arready),
     .core_rdata(rdata),
@@ -82,6 +84,7 @@ AXI_Interconnect u_AXI(
     .core_rvalid(rvalid),
     .core_rready(rready),
     .core_awaddr(awaddr),
+    .core_awprot(),
     .core_awvalid(awvalid),
     .core_awready(awready),
     .core_wdata(wdata),
@@ -92,7 +95,8 @@ AXI_Interconnect u_AXI(
     .core_bvalid(bvalid),
     .core_bready(bready),
     .rx(rx),
-    .tx(tx)
+    .tx(tx),
+    .intr(extIntr)
 );
 
 core u_core(
@@ -114,7 +118,8 @@ core u_core(
     .wready(wready),
     .bresp(bresp),
     .bvalid(bvalid),
-    .bready(bready)
+    .bready(bready),
+    .extIntr(extIntr)
 );
 
 asyncRstSyncRelease u_arsr(

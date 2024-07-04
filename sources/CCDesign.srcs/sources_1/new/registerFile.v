@@ -24,18 +24,21 @@ module registerFile(
     input wire clk,             
     input wire rst,           
     input wire [4:0] ra,        
-    input wire [4:0] rb,        
+    input wire [4:0] rb,
     input wire [4:0] rw,        
     input wire wen,             
     input wire [31:0] wdata,    
     output wire [31:0] rs1,     
-    output wire [31:0] rs2      
+    output wire [31:0] rs2,
+    
+    output wire [31:0] a7 // trap cause reg
 );
 
     reg [31:0] registers [31:0];  
 
     assign rs1 = (ra != 5'b0) ? registers[ra] : 32'b0;
     assign rs2 = (rb != 5'b0) ? registers[rb] : 32'b0;
+    assign a7 = registers[17];
 
     integer i;
     always @(posedge clk) begin

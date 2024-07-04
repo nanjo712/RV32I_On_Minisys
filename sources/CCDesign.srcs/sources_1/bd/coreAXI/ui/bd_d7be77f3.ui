@@ -1,23 +1,31 @@
 {
    "ActiveEmotionalView":"Default View",
    "Default View_ScaleFactor":"1.0",
-   "Default View_TopLeft":"-420,-322",
+   "Default View_TopLeft":"-111,-227",
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0 TLS
 #  -string -flagsOSRD
 preplace port ifu -pg 1 -lvl 0 -x -10 -y -160 -defaultsOSRD
 preplace port lsu -pg 1 -lvl 0 -x -10 -y -130 -defaultsOSRD
-preplace port coreOut -pg 1 -lvl 2 -x 350 -y -50 -defaultsOSRD
-preplace port port-id_clk -pg 1 -lvl 0 -x -10 -y -60 -defaultsOSRD
+preplace port coreOut -pg 1 -lvl 3 -x 680 -y -80 -defaultsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x -10 -y -30 -defaultsOSRD
 preplace port port-id_rstn -pg 1 -lvl 0 -x -10 -y 10 -defaultsOSRD
+preplace port port-id_sof -pg 1 -lvl 3 -x 680 -y -50 -defaultsOSRD
+preplace port port-id_tim -pg 1 -lvl 3 -x 680 -y 0 -defaultsOSRD
+preplace port port-id_rst -pg 1 -lvl 0 -x -10 -y 50 -defaultsOSRD
 preplace inst axi_crossbar_0 -pg 1 -lvl 1 -x 180 -y -60 -defaultsOSRD
-preplace netloc clk_1 1 0 1 20 -60n
-preplace netloc rstn_1 1 0 1 10 -30n
-preplace netloc axi_crossbar_0_M00_AXI 1 1 1 320 -60n
+preplace inst clint_0 -pg 1 -lvl 2 -x 490 -y 30 -defaultsOSRD
+preplace netloc clint_0_sof_interrupt 1 2 1 650 -50n
+preplace netloc clint_0_tim_interrupt 1 2 1 660 0n
+preplace netloc clk_1 1 0 2 30 30 N
+preplace netloc rst_1 1 0 2 N 50 NJ
+preplace netloc rstn_1 1 0 1 40 -30n
+preplace netloc axi_crossbar_0_M00_AXI 1 1 2 N -70 650
+preplace netloc axi_crossbar_0_M01_AXI 1 1 1 320 -50n
 preplace netloc ifu_1 1 0 1 20 -160n
 preplace netloc lsu_1 1 0 1 10 -130n
-levelinfo -pg 1 -10 180 350
-pagesize -pg 1 -db -bbox -sgen -90 -250 510 420
+levelinfo -pg 1 -10 180 490 680
+pagesize -pg 1 -db -bbox -sgen -90 -290 790 450
 "
 }
 0

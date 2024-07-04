@@ -44,12 +44,17 @@ module core(
 
     input wire [1:0] bresp,
     input wire bvalid,
-    output wire bready
+    output wire bready,
+    
+    input wire extIntr
 );
 
 wire [31:0] pc;
 wire [31:0] inst;
 wire [31:0] nextPC;
+
+wire ecall;
+wire mret;
 
 wire InsFetch;
 wire [2:0] ExtOP;
@@ -58,18 +63,20 @@ wire ALUAsrc;
 wire [1:0] ALUBsrc;
 wire [3:0] ALUctr;
 wire [2:0] Branch;
-wire MemtoReg;
+wire [1:0] toReg;
 wire MemWr;
 wire [2:0] MemOP;
-wire PCAsrc;
-wire PCBsrc;
+wire [0:0] PCAsrc;
+wire [0:0] PCBsrc;
 wire PCInc;
+wire [1:0] CSROp;
 
 wire ifu_ready;
 wire lsu_ready;
 
 wire [31:0] RegBusA;
 wire [31:0] RegBusB;
+wire [31:0] a7;
 
 wire [31:0] imm;
 
@@ -84,8 +91,23 @@ wire Zero;
 
 wire [31:0] DataOut;
 
-wire [31:0] wbdata = (MemtoReg) ? DataOut : ALUout;
+wire [31:0] CSRout;
 
+wire [31:0] wbdata = (toReg == 2'b01) ? DataOut : 
+                     (toReg == 2'b10) ? CSRout : ALUout;
+                     
+wire [31:0] csrwdata = (inst[14]) ? {27'b0, inst[19:15]} : RegBusA;
+
+wire csr_intr;
+
+wire ext_interrupt = extIntr;
+wire sof_interrupt;
+wire tim_interrupt;
+wire ext;
+wire sof;
+wire tim;
+
+// AXI for IFU(R)
 wire [31:0] ifu_araddr;
 wire ifu_arvalid;
 wire ifu_arready;
@@ -95,6 +117,7 @@ wire [1:0] ifu_rresp;
 wire ifu_rvalid;
 wire ifu_rready;
 
+// AXI for LSU(RW)
 wire [31:0] lsu_araddr;
 wire lsu_arvalid;
 wire lsu_arready;
@@ -116,6 +139,29 @@ wire lsu_wready;
 wire [1:0] lsu_bresp;
 wire lsu_bvalid;
 wire lsu_bready;
+
+// AXI for CLINT(RW)
+wire [31:0] clint_araddr;
+wire clint_arvalid;
+wire clint_arready;
+
+wire [31:0] clint_rdata;
+wire [1:0] clint_rresp;
+wire clint_rvalid;
+wire clint_rready;
+
+wire [31:0] clint_awaddr;
+wire clint_awvalid;
+wire clint_awready;
+
+wire [31:0] clint_wdata;
+wire [3:0] clint_wstrb;
+wire clint_wvalid;
+wire clint_wready;
+
+wire [1:0] clint_bresp;
+wire clint_bvalid;
+wire clint_bready;
 
 coreAXI u_coreAXI(
     .clk(clk),
@@ -165,7 +211,27 @@ coreAXI u_coreAXI(
     .lsu_wready(lsu_wready),
     .lsu_wstrb(lsu_wstrb),
     .lsu_wvalid(lsu_wvalid),
-    .rstn(~rst)
+    .rstn(~rst),
+    .rst(rst),
+    .sof(sof_interrupt),
+    .tim(tim_interrupt)
+);
+
+csr u_csr(
+    .clk(clk),
+    .rst(rst),
+    .ext_interrupt(ext),
+    .sof_interrupt(sof),
+    .tim_interrupt(tim),
+    .epc(pc),
+    .cause(a7),
+    .waddr(inst[31:20]),
+    .wdata(csrwdata),
+    .CSROp(CSROp),
+    .ecall(ecall),
+    .mret(mret),
+    .CSRout(CSRout),
+    .interrupt(csr_intr)
 );
 
 pcReg u_pcReg(
@@ -177,6 +243,8 @@ pcReg u_pcReg(
 );
 
 jumpCalc u_jumpCalc(
+    .interrupt(csr_intr),
+    .csr(CSRout),
     .imm(imm),
     .pc(pc),
     .rs1(RegBusA),
@@ -245,17 +313,19 @@ registerFile u_registerFile(
     .wen(RegWr),
     .wdata(wbdata),
     .rs1(RegBusA),
-    .rs2(RegBusB)
+    .rs2(RegBusB),
+    .a7(a7)
 );
 
 contr_gen u_contr_gen(
     .clk(clk),
     .rst(rst),
-    .op(inst[6:0]),
-    .func3(inst[14:12]),
-    .func7(inst[31:25]),
+    .inst(inst),
     .ifu_ready(ifu_ready),
     .lsu_ready(lsu_ready),
+    .ext_interrupt(ext_interrupt),
+    .sof_interrupt(sof_interrupt),
+    .tim_interrupt(tim_interrupt),
     .InsFetch(InsFetch),
     .ExtOP(ExtOP),
     .RegWr(RegWr),
@@ -263,10 +333,16 @@ contr_gen u_contr_gen(
     .ALUBsrc(ALUBsrc),
     .ALUctr(ALUctr),
     .Branch(Branch),
-    .MemtoReg(MemtoReg),
+    .toReg(toReg),
     .MemWr(MemWr),
     .MemOP(MemOP),
-    .PCInc(PCInc)
+    .PCInc(PCInc),
+    .CSROp(CSROp),
+    .ecall(ecall),
+    .mret(mret),
+    .ext(ext),
+    .sof(sof),
+    .tim(tim)
 );
 
 ifu u_ifu(

@@ -3,6 +3,8 @@
 SRCS = $(wildcard src/*.c) $(wildcard src/*.S)
 OBJS = $(addprefix build/, $(addsuffix .o, $(basename $(notdir $(SRCS)))))
 
+all: build/am.a
+
 build/%.o: src/%.c
 	mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@ -Iinclude
@@ -14,8 +16,6 @@ build/%.o: src/%.S
 build/am.a: $(OBJS)
 	mkdir -p build
 	$(AR) rcs $@ $^
-
-all: build/am.a
 
 clean:
 	rm -rf build

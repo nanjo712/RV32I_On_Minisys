@@ -21,17 +21,21 @@
 
 
 module jumpCalc(
+    input [31:0] csr,
     input [31:0] imm,
     input [31:0] pc,
     input [31:0] rs1,
-    input PCAsrc,
-    input PCBsrc,
+    input [0:0] PCAsrc,
+    input [0:0] PCBsrc,
+    input interrupt,
     output [31:0] nextPC
     );
-    wire [1:0] cond = {PCAsrc, PCBsrc};
+    wire [31:0] asrc = (PCAsrc == 1'b0) ? 32'd4 :
+                       (PCAsrc == 1'b1) ? imm : 0;
+                       
+    wire [31:0] bsrc = (PCBsrc == 1'b0) ? pc :
+                       (PCBsrc == 1'b1) ? rs1 : 0;
 
-    assign nextPC = (cond == 2'b00) ? pc + 4 :
-                    (cond == 2'b10) ? pc + imm :
-                    (cond == 2'b11) ? rs1 + imm : 0;
+    assign nextPC = (interrupt) ? csr : asrc + bsrc;
 endmodule
 
