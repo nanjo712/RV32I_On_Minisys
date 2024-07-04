@@ -270,13 +270,13 @@ int main()
     {
         if (mode == 1)
         {
-            uart_lite_send(
-                &uart, (unsigned char *)"Please input an expression:\n", 29);
+            uart_lite_send(&uart,
+                           (unsigned char *)"Please input an expression:", 29);
             get_line(&uart, buffer);
             int result;
             if (caculate(buffer, &result))
             {
-                uart_lite_send(&uart, (unsigned char *)"Invalid expression!\n",
+                uart_lite_send(&uart, (unsigned char *)"Invalid expression!",
                                21);
             }
             else
@@ -292,11 +292,11 @@ int main()
             int offset = 0;
             uart_lite_send(
                 &uart,
-                (unsigned char *)"Please input the length of the array:\n", 37);
+                (unsigned char *)"Please input the length of the array:", 37);
             get_line(&uart, buffer);
             parse_int(buffer, &count);
-            uart_lite_send(&uart, (unsigned char *)"Please input the array:\n",
-                           26);
+            uart_lite_send(&uart,
+                           (unsigned char *)"Please input the array:", 26);
             get_line(&uart, buffer);
             for (int i = 0; i < count; i++)
             {
