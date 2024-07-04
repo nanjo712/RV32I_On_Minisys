@@ -6,5 +6,5 @@ OBJCOPY = $(COMPILER)objcopy
 OBJDUMP = $(COMPILER)objdump
 READELF = $(COMPILER)readelf
 
-CFLAGS += -Wall -O2 -Werror -march=rv32i -mabi=ilp32 -nostdlib \
+CFLAGS += -Wall -O2 -Werror -march=rv32i_zicsr -mabi=ilp32 -nostdlib \
 	-ffunction-sections -fdata-sections

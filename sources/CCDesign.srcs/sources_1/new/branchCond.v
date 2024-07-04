@@ -24,17 +24,17 @@ module branchCond(
     input [2:0] branch,
     input less,
     input zero,
-    output PCAsrc,
-    output PCBsrc
+    output [0:0] PCAsrc,
+    output [0:0] PCBsrc
     );
 
-    assign PCAsrc = branch == 3'b000 ? 0 :
-                    branch == 3'b001 ? 1 :
-                    branch == 3'b010 ? 1 :
+    assign PCAsrc = branch == 3'b000 ? 1'b0 :
+                    branch == 3'b001 ? 1'b1 :
+                    branch == 3'b010 ? 1'b1 :
                     branch == 3'b100 ? zero :
                     branch == 3'b101 ? ~zero :
                     branch == 3'b110 ? less :
                     branch == 3'b111 ? ~less : 0;
 
-    assign PCBsrc = branch == 3'b010 ? 1 : 0;
+    assign PCBsrc = branch == 3'b010 ? 1'b1 : 0;
 endmodule

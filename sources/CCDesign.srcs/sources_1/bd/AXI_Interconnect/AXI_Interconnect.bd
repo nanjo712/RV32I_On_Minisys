@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x1FE00DC9F962E42B",
+      "boundary_crc": "0xA016B51A837F4654",
       "device": "xc7a100tfgg484-1",
       "gen_directory": "../../../../CCDesign.gen/sources_1/bd/AXI_Interconnect",
       "name": "AXI_Interconnect",
@@ -309,6 +309,19 @@
             "value_src": "default"
           }
         }
+      },
+      "intr": {
+        "direction": "O",
+        "parameters": {
+          "PortWidth": {
+            "value": "1",
+            "value_src": "default_prop"
+          },
+          "SENSITIVITY": {
+            "value": "EDGE_RISING",
+            "value_src": "const_prop"
+          }
+        }
       }
     },
     "components": {
@@ -422,6 +435,12 @@
       }
     },
     "nets": {
+      "axi_uartlite_0_interrupt": {
+        "ports": [
+          "axi_uartlite_0/interrupt",
+          "intr"
+        ]
+      },
       "axi_uartlite_0_tx": {
         "ports": [
           "axi_uartlite_0/tx",
@@ -465,7 +484,7 @@
               },
               "SEG_axi_uartlite_0_Reg": {
                 "address_block": "/axi_uartlite_0/S_AXI/Reg",
-                "offset": "0x10000000",
+                "offset": "0x40000000",
                 "range": "128"
               }
             }

@@ -7,11 +7,13 @@ LDFLAGS += -T scripts/linker.ld -melf32lriscv \
 
 LIBS = am
 
+all: build/$(IMAGE).bin build/$(IMAGE).txt build/$(IMAGE).elf target.coe
+
 program/build/$(IMAGE).o: program/srcs/$(IMAGE).c
 	mkdir -p program/build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/$(IMAGE).elf: $(LIBS)/build/$(LIBS).a program/build/$(IMAGE).o
+build/$(IMAGE).elf: program/build/$(IMAGE).o $(LIBS)/build/$(LIBS).a 
 	mkdir -p build
 	$(LD) $(LDFLAGS) -o $@ $^
 
@@ -24,8 +26,6 @@ build/$(IMAGE).bin: build/$(IMAGE).elf
 
 target.coe: build/$(IMAGE).bin
 	util/bin2coe $< $@
-
-all: build/$(IMAGE).bin build/$(IMAGE).txt build/$(IMAGE).elf target.coe
 
 clean:
 	rm -rf build program/build
