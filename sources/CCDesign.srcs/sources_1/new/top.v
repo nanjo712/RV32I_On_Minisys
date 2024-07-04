@@ -23,9 +23,15 @@
 module top(
     input wire clock,
     input wire reset,
-    
+   
     input rx,
-    output tx
+    output tx,
+    
+    output [7:0] dig_en,
+    output [7:0] dig_cx,
+    
+    output [23:0] led,
+    input [23:0] sw
 );
 wire clk_10Mhz;
 wire clk_30Mhz;
@@ -58,6 +64,11 @@ wire bvalid;
 wire bready;
 
 wire extIntr;
+
+wire [31:0] in_led;
+wire [31:0] in_sw = {8'd0, sw};
+
+assign led = in_led[23:0];
 
 clk_wiz_0 u_clk_wiz(
   // Clock out ports
@@ -96,7 +107,11 @@ AXI_Interconnect u_AXI(
     .core_bready(bready),
     .rx(rx),
     .tx(tx),
-    .intr(extIntr)
+    .intr(extIntr),
+    .dig_en(dig_en),
+    .dig_cx(dig_cx),
+    .led(in_led),
+    .sw(in_sw)
 );
 
 core u_core(
