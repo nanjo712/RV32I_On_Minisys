@@ -7,11 +7,11 @@ all: build/am.a
 
 build/%.o: src/%.c
 	mkdir -p build
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -Iinclude
 
 build/%.o: src/%.S
 	mkdir -p build
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -Iinclude
 
 build/am.a: $(OBJS)
 	mkdir -p build

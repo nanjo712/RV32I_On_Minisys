@@ -9,10 +9,13 @@ LIBS = am
 
 all: build/$(IMAGE).bin build/$(IMAGE).txt build/$(IMAGE).elf target.coe
 
-program/build/$(IMAGE).o: program/srcs/$(IMAGE).c
-	mkdir -p program/build
+all: build/$(IMAGE).bin build/$(IMAGE).txt build/$(IMAGE).elf target.coe
+
+test/build/$(IMAGE).o: test/srcs/$(IMAGE).c
+	mkdir -p test/build
 	$(CC) $(CFLAGS) -c $< -o $@
 
+build/$(IMAGE).elf: $(LIBS)/build/$(LIBS).a test/build/$(IMAGE).o
 build/$(IMAGE).elf: program/build/$(IMAGE).o $(LIBS)/build/$(LIBS).a 
 	mkdir -p build
 	$(LD) $(LDFLAGS) -o $@ $^
@@ -28,4 +31,4 @@ target.coe: build/$(IMAGE).bin
 	util/bin2coe $< $@
 
 clean:
-	rm -rf build program/build
+	rm -rf build test/build
