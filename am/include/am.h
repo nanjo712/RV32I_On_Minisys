@@ -1,21 +1,25 @@
 #ifndef __AM_H__
 #define __AM_H__
 
-#include <stdint.h>
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
-typedef struct {
+typedef struct
+{
     void *start, *end;
 } Area;
 
-typedef struct {
+typedef struct
+{
     uintptr_t gpr[32], mcause, mstatus, mepc;
     void *pdir;
 } Context;
 
-typedef struct {
-    enum {
+typedef struct
+{
+    enum
+    {
         EVENT_NULL = 0,
         EVENT_YIELD,
         EVENT_IRQ_TIMER,
@@ -30,6 +34,8 @@ typedef struct {
 // Base functions
 
 extern Area heap;
+
+extern Area heap;
 void putch(char c);
 void getch(char *c);
 
@@ -37,8 +43,11 @@ void halt(int code);
 void assert(int cond);
 
 // CTE functions
-bool cte_init(Context *(*handler)(Event, Context*));
+bool cte_init(Context *(*handler)(Event, Context *));
 void yield();
+Context *kcontext(Area kstack, void (*entry)(void *), void *arg);
+
+Context *kcontext(Area kstack, void (*entry)(void *), void *arg);
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg);
 
 #endif

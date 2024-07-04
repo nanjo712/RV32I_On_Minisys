@@ -3,7 +3,7 @@
    "Default View_ScaleFactor":"1.0",
    "Default View_TopLeft":"-111,-227",
    "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0 TLS
+   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
 #  -string -flagsOSRD
 preplace port ifu -pg 1 -lvl 0 -x -10 -y -160 -defaultsOSRD
 preplace port lsu -pg 1 -lvl 0 -x -10 -y -130 -defaultsOSRD
@@ -15,12 +15,12 @@ preplace port port-id_tim -pg 1 -lvl 3 -x 680 -y 0 -defaultsOSRD
 preplace port port-id_rst -pg 1 -lvl 0 -x -10 -y 50 -defaultsOSRD
 preplace inst axi_crossbar_0 -pg 1 -lvl 1 -x 180 -y -60 -defaultsOSRD
 preplace inst clint_0 -pg 1 -lvl 2 -x 490 -y 30 -defaultsOSRD
-preplace netloc clint_0_sof_interrupt 1 2 1 650 -50n
-preplace netloc clint_0_tim_interrupt 1 2 1 660 0n
+preplace netloc clint_0_sof_interrupt 1 2 1 640 -50n
+preplace netloc clint_0_tim_interrupt 1 2 1 650 0n
 preplace netloc clk_1 1 0 2 30 30 N
 preplace netloc rst_1 1 0 2 N 50 NJ
 preplace netloc rstn_1 1 0 1 40 -30n
-preplace netloc axi_crossbar_0_M00_AXI 1 1 2 N -70 650
+preplace netloc axi_crossbar_0_M00_AXI 1 1 2 N -70 640
 preplace netloc axi_crossbar_0_M01_AXI 1 1 1 320 -50n
 preplace netloc ifu_1 1 0 1 20 -160n
 preplace netloc lsu_1 1 0 1 10 -130n
