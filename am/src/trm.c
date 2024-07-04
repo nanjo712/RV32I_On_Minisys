@@ -1,5 +1,12 @@
+#include "../include/am.h"
+
 extern char _head_start;
 extern char _head_end;
+
+Area heap = {
+    .start = &_head_end,
+    .end = &_head_end
+};
 
 int main();
 
