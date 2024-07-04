@@ -59,7 +59,7 @@ add_custom_command(
     COMMAND ${SIZE} $<TARGET_FILE:${PROJECT_NAME}.elf>
     COMMAND ./bin2coe ${BIN_FILE} ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe
     COMMAND ${CMAKE_OBJDUMP} -d $<TARGET_FILE:${PROJECT_NAME}.elf> > ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.txt
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe /mnt/c/Users/john/Documents/RV32I/
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coe /mnt/d/RV32I_On_Minisys
     COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}"
 )
 
