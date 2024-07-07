@@ -425,7 +425,7 @@
         "inst_hier_path": "blk_mem_gen_0",
         "parameters": {
           "Coe_File": {
-            "value": "../../../../../../rv32i_on_minisys.coe"
+            "value": "../../../../../../../rv32i_on_minisys.coe"
           },
           "EN_SAFETY_CKT": {
             "value": "false"
@@ -545,12 +545,6 @@
             "value": "0xffffffffffffffff"
           },
           "M01_A15_BASE_ADDR": {
-            "value": "0xffffffffffffffff"
-          },
-          "M02_A00_ADDR_WIDTH": {
-            "value": "0"
-          },
-          "M02_A00_BASE_ADDR": {
             "value": "0xffffffffffffffff"
           },
           "M02_A01_BASE_ADDR": {
@@ -1763,10 +1757,10 @@
       "clk_1": {
         "ports": [
           "clk",
-          "axi_bram_ctrl_0/s_axi_aclk",
-          "axi_crossbar_0/aclk",
           "axi_uartlite_0/s_axi_aclk",
-          "gpio_0/clk"
+          "gpio_0/clk",
+          "axi_bram_ctrl_0/s_axi_aclk",
+          "axi_crossbar_0/aclk"
         ]
       },
       "gpio_0_dig_cx": {
@@ -1796,9 +1790,9 @@
       "rst_n_1": {
         "ports": [
           "rst_n",
+          "axi_uartlite_0/s_axi_aresetn",
           "axi_bram_ctrl_0/s_axi_aresetn",
-          "axi_crossbar_0/aresetn",
-          "axi_uartlite_0/s_axi_aresetn"
+          "axi_crossbar_0/aresetn"
         ]
       },
       "rx_1": {

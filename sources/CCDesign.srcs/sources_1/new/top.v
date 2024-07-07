@@ -86,6 +86,7 @@ clk_wiz_0 u_clk_wiz(
 AXI_Interconnect u_AXI(
     .clk(clk),
     .rst_n(~rst),
+    .rst(rst),
     .core_araddr(araddr),
     .core_arprot(),
     .core_arvalid(arvalid),

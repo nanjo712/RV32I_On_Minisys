@@ -28,14 +28,26 @@ reg reset;
 reg rx;
 wire tx;
 
+
+wire [7:0] dig_en;
+wire [7:0] dig_cx;
+    
+wire [23:0] led;
+reg [23:0] sw;
+
 top u_top(
     .clock(clock),
     .reset(reset),
     .rx(rx),
-    .tx(tx)
+    .tx(tx),
+    .dig_en(dig_en),
+    .dig_cx(dig_cx),
+    .led(led),
+    .sw(sw)
 );
 
 initial begin
+    sw = 24'b0;
     rx = 1'b1;
     clock = 1'b0;
     reset = 1'b1;
