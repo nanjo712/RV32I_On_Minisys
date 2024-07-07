@@ -6,6 +6,9 @@ extern "C"
 {
 #endif
 
+#include <stdbool.h>
+#include <stddef.h>
+
 #include "hal_status.h"
 
 #define UART_LITE_BASEADDR 0x40000000
@@ -40,6 +43,12 @@ extern "C"
                                      unsigned char *data, unsigned int size);
     HAL_StatusTypeDef uart_lite_recv(HAL_UART_LITE_TypeDef *uart,
                                      unsigned char *data, unsigned int size);
+    void uart_interrupt_callback();
+    HAL_StatusTypeDef uart_lite_recv_it(HAL_UART_LITE_TypeDef *uart,
+                                        unsigned char *data, unsigned int size,
+                                        volatile bool *done);
+
+    extern HAL_UART_LITE_TypeDef uart;
 
 #ifdef __cplusplus
 }

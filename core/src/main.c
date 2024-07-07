@@ -1,10 +1,42 @@
+#include <stdint.h>
+
 #include "hal.h"
 
-#define NULL ((void *)0)
+// #define NULL ((void *)0)
 
 #define MAX_STACK_SIZE 100
 
+void task_for_serial();
+
 unsigned char space = 32;
+int ind = 0;
+uintptr_t last_pc = (uintptr_t)&task_for_serial;
+
+uint64_t period = 10000000;
+uint64_t counter;
+
+unsigned int patterns[] = {
+    0x00001, 0x00002, 0x00004, 0x00008, 0x00010, 0x00020, 0x00040,
+    0x00080, 0x00100, 0x00200, 0x00400, 0x00800, 0x01000, 0x02000,
+    0x04000, 0x08000, 0x10000, 0x20000, 0x40000, 0x80000,  // 从低位到高位
+    0x80000, 0x40000, 0x20000, 0x10000, 0x08000, 0x04000, 0x02000,
+    0x01000, 0x00800, 0x00400, 0x00200, 0x00100, 0x00080, 0x00040,
+    0x00020, 0x00010, 0x00008, 0x00004, 0x00002, 0x00001,  // 从高位到低位
+    0x80001, 0x40002, 0x20004, 0x10008, 0x08010, 0x04020, 0x02040,
+    0x01080, 0x00900, 0x01200, 0x02400, 0x04800, 0x09000, 0x12000,
+    0x24000, 0x48000,
+    0x90000,  // 从两边到中间
+    0x48000, 0x24000, 0x12000, 0x09000, 0x04800, 0x02400, 0x01200,
+    0x00900, 0x01080, 0x02040, 0x04020, 0x08010, 0x10008, 0x20004,
+    0x40002, 0x80001  // 中间碰撞后回弹
+};
+
+void enable_interrupt()
+{
+    asm volatile("csrsi mstatus, 0x8");
+    asm volatile("li t0, 0x888");
+    asm volatile("csrs mie, t0");
+}
 
 // 模拟isdigit函数
 int is_digit(char c) { return c >= '0' && c <= '9'; }
@@ -205,7 +237,7 @@ int select_mode(HAL_UART_LITE_TypeDef *uart, char *buffer)
         get_line(uart, buffer);
         if (buffer[0] == '1' || buffer[0] == '2') return buffer[0] - '0';
         uart_lite_send(
-            uart, (unsigned char *)"Invalid mode! Please try again.\n", 32);
+            uart, (unsigned char *)"Invalid mode! Please try again.\n", 33);
     }
 }
 
@@ -257,34 +289,60 @@ int parse_int(char *buffer, int *value)
     return i + 1;
 }
 
+Context *it_handler(Event ev, Context *prev)
+{
+    if (ev.event == EVENT_IRQ_TIMER)
+    {
+        gpio_write(&gpio, GPIO_PORT_A, patterns[ind]);
+        gpio_write(&gpio, GPIO_PORT_B, patterns[ind]);
+        ind++;
+        ind %= 73;
+        timer_get_counter(&timer, &counter);
+        timer_set_compare(&timer, period + counter);
+    }
+    return prev;
+}
+
 int main()
 {
-    HAL_UART_LITE_TypeDef uart = {NULL, NULL, NULL, NULL};
+    // init
+    gpio_init(&gpio);
+    timer_init(&timer);
     uart_lite_init(&uart);
+    timer_get_counter(&timer, &counter);
+    timer_set_compare(&timer, period + counter);
 
+    enable_interrupt();
+    cte_init(it_handler);
+
+    task_for_serial();
+    return 0;
+}
+
+void task_for_serial()
+{
     char buffer[256];
     int array[100];
     int mode = select_mode(&uart, buffer);
-
     while (1)
     {
         if (mode == 1)
         {
             uart_lite_send(&uart,
-                           (unsigned char *)"Please input an expression:", 29);
+                           (unsigned char *)"Please input an expression:", 28);
             get_line(&uart, buffer);
             int result;
             if (caculate(buffer, &result))
             {
                 uart_lite_send(&uart, (unsigned char *)"Invalid expression!",
-                               21);
+                               20);
             }
             else
             {
                 int len = serialize_int(buffer, result);
                 uart_lite_send(&uart, (unsigned char *)buffer, len);
             }
-            uart_lite_send(&uart, (unsigned char *)"\n", 1);
+            uart_lite_send(&uart, (unsigned char *)"\n", 2);
         }
         else if (mode == 2)
         {
@@ -292,26 +350,27 @@ int main()
             int offset = 0;
             uart_lite_send(
                 &uart,
-                (unsigned char *)"Please input the length of the array:", 37);
+                (unsigned char *)"Please input the length of the array:", 38);
             get_line(&uart, buffer);
             parse_int(buffer, &count);
             uart_lite_send(&uart,
-                           (unsigned char *)"Please input the array:", 26);
+                           (unsigned char *)"Please input the array:", 24);
             get_line(&uart, buffer);
             for (int i = 0; i < count; i++)
             {
                 offset += parse_int(buffer + offset, &array[i]);
             }
             quick_sort(array, 0, count - 1);
-            uart_lite_send(&uart, (unsigned char *)"Sorted array:\n", 14);
+            uart_lite_send(&uart, (unsigned char *)"Sorted array:\n", 15);
             for (int i = 0; i < count; i++)
             {
                 int len = serialize_int(buffer, array[i]);
+                // buffer[len++] = '\n';
+                // buffer[len++] = '\0';
                 uart_lite_send(&uart, (unsigned char *)buffer, len);
-                uart_lite_send_byte(&uart, &space);
+                uart_lite_send(&uart, (unsigned char *)"\n", 2);
             }
-            uart_lite_send(&uart, (unsigned char *)"\n", 1);
+            uart_lite_send(&uart, (unsigned char *)"\n", 2);
         }
     }
-    return 0;
 }

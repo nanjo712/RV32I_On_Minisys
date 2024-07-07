@@ -35,7 +35,11 @@ add_library(
     STATIC
     am/src/trm.c
     am/src/uart_lite.c
+    am/src/gpio.c
+    am/src/timer.c
+    am/src/cte.c
     am/src/start.S
+    am/src/trap.S
 )
 target_include_directories(abstract_machine PRIVATE am/include)
 target_include_directories(abstract_machine PUBLIC core/include)
